@@ -1,0 +1,14 @@
+.\obj\lcd1602.o: ..\HARDWARE\LCD1602\LCD1602.c
+.\obj\lcd1602.o: ..\HARDWARE\LCD1602\LCD1602.h
+.\obj\lcd1602.o: ..\SYSTEM\sys\sys.h
+.\obj\lcd1602.o: ..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+.\obj\lcd1602.o: ..\Libraries\CMSIS\CM3\CoreSupport\core_cm3.h
+.\obj\lcd1602.o: F:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\lcd1602.o: ..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\system_stm32f10x.h
+.\obj\lcd1602.o: ..\USER\stm32f10x_conf.h
+.\obj\lcd1602.o: ..\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+.\obj\lcd1602.o: ..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+.\obj\lcd1602.o: ..\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+.\obj\lcd1602.o: ..\Libraries\STM32F10x_StdPeriph_Driver\inc\misc.h
+.\obj\lcd1602.o: ..\SYSTEM\delay\delay.h
+.\obj\lcd1602.o: ..\HARDWARE\LED\led.h
