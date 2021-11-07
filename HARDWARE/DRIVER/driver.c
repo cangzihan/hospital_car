@@ -4,7 +4,7 @@
 
 #define Speed_UP 3000
 #define Speed_LEFT_UP 3200
-#define Speed_LEFT_DOWN 1900
+#define Speed_LEFT_DOWN 2300
 #define Speed_ADD 100
 #define Speed_DEC 250
 

@@ -24,8 +24,7 @@
 #define yaw_180_1 48000
 #define yaw_180_2 12000
 
-#define ALLOWED_SLOPE 500
-
+#define ALLOWED_SLOPE 250
 u32 time = 0;
 u32 time0;
 
@@ -123,6 +122,11 @@ void turn_90(u16 yaw_goal)
 		dir = 1;
 	else
 		dir = 0;
+	
+	if((yaw_goal==yaw_90r)&&(yaw>40000))
+	{
+		dir = 1;
+	}
 	
 	while(1)
 	{
@@ -224,6 +228,24 @@ u8 find_goal(void)
 	return 0;
 }
 
+u8 find_shi(void)
+{
+	u8 openmv_data;    //Openmv数据
+	// Get Openmv数据
+	openmv_data = OpenMV_IO_Scan();
+	if(openmv_data==12)
+	{
+		return 1;
+	}
+	else
+	{
+		OLED_ShowChar(72,6,'0'+openmv_data/10, 16);
+		OLED_ShowChar(80,6,'0'+openmv_data%10, 16);
+	}
+	return 0;
+}
+
+
 // 跳转mode
 void mode_change()
 {
@@ -241,8 +263,9 @@ void mode_change()
 	}
 	else if(mode==1)
 	{
-		if(time>=56)
+		if(find_shi())
 		{
+			LED0=0;
 			if(aim==1||aim==2)
 			{
 				car_run(0x03);
@@ -331,12 +354,13 @@ void mode_change()
 	}
 	else if(mode==2)
 	{
-		if(time>=time0+30)
+		if((find_shi())&&(time>=time0+10))
 		{
+			LED1=0;
 			if(aim==3||aim==4)
 			{
 				car_run(0x03);
-				delay_ms(500); 
+				delay_ms(1000); 
 				if(aim==3)
 				{
 					mode=210;
@@ -421,12 +445,17 @@ void mode_change()
 	}
 	else if(mode==3)
 	{
-		if(time>=time0+30)
+		if((find_shi())&&(time>=time0+10))
 		{
+			LED2=0;
+			car_run(0x01);
+			delay_ms(100);
 			if(aim==5||aim==6||aim==7||aim==8)
 			{
 				car_run(0x03);
-				delay_ms(500); 
+				delay_ms(1000); 
+				car_run(0x01);
+				delay_ms(100); 
 				if(aim==5)
 				{
 					mode=3110;
@@ -518,11 +547,16 @@ void mode_change()
 	}
 	else if(mode==3121)//远端第一次左转后前进再右转
 	{
-		if(time>=time0+45)
+		if(find_shi())
 		{
+			LED0=1;
+			LED1=1;
+			LED2=1;
 			mode+=1;
+			car_run(0x01);
+			delay_ms(200); 
 			car_run(0x03);
-			delay_ms(1000); 
+			delay_ms(500); 
 			turn_180(1);		
 			time0=time;		
 		}
@@ -539,7 +573,7 @@ void mode_change()
 	}
 	else if(mode==3123)//远端后退然后转至90度
 	{
-		if(time>=time0+30)
+		if(time>=time0+40)
 		{
 			mode+=1;
 			car_run(0x03);
@@ -694,6 +728,7 @@ void display_initial(void)
 
 void system_initial()
 {
+  LED_Init();
 	delay_init();
 	IIC_Init();
 //	uart_init(115200);
@@ -721,7 +756,6 @@ int main(void)
 	while(!(USART_RX_STA&0x8000));
 	USART_RX_STA=0; //清除串口标志位
 	delay_ms(1000); 
-	mode = 0;
 
 	while (1)
 	{
@@ -779,7 +813,7 @@ int main(void)
 			delay_ms(100);
 		}
 		time += 1;
-		delay_ms(50); 
+		delay_ms(20); 
 	}
 }
 

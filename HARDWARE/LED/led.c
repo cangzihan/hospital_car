@@ -12,11 +12,7 @@ void LED_Init(void)
  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
  GPIO_Init(GPIOA, &GPIO_InitStructure);
- GPIO_ResetBits(GPIOA, GPIO_Pin_8|GPIO_Pin_12|GPIO_Pin_11);						 //输出高
-
- GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9;	    	
- GPIO_Init(GPIOB, &GPIO_InitStructure);	  				 //推挽输出 ，IO口速度为50MHz
- GPIO_ResetBits(GPIOB, GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9); 						 //输出高 
+ GPIO_SetBits(GPIOA, GPIO_Pin_8|GPIO_Pin_12|GPIO_Pin_11);						 //输出高
 }
 
 void led_output(u8 cmd)
