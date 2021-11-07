@@ -24,14 +24,15 @@
 #define yaw_180_2 12000
 
 
+
 u32 time = 0;
 u32 time0;
 
 u8 work=1;
-u8 mode=0;
+u16 mode=0;
 u8 test_mode=0;
 u8 current_loc = 0;
-u8 aim=1;
+u8 aim=7;
 
 //俯仰，偏航，滚转
 u16 pitch,yaw = 30000,roll;
@@ -42,6 +43,8 @@ void run_line(u16 yaw_keep)
 	u16 yaw_now;    //用局部变量为了防止全局变量被中断修改
 	if((yaw_keep==yaw_180_1)&&(yaw<yaw_0))
 		yaw_now = yaw + 36000;
+	else if((yaw_keep==yaw_180_2)&&(yaw>yaw_0))
+		yaw_now = yaw - 36000;
 	else
 		yaw_now = yaw;
 	// Show 陀螺仪数据
@@ -213,6 +216,8 @@ void mode_change()
 				{
 					mode=120;
 					turn_90(yaw_90r);
+					mode=121;
+					time0=time;
 				}
 			}
 			else
@@ -220,26 +225,6 @@ void mode_change()
 				mode+=1;
 				time0=time;
 			}
-		}
-	}
-	else if(mode==2)
-	{
-		if(time>=time0+50)
-		{
-			mode+=1;
-			car_run(0x03);
-			delay_ms(1000); 
-			time0=time;
-		}
-	}
-	else if(mode==3)
-	{
-		if(time>=time0+60)
-		{
-			mode+=1;
-			car_run(0x03);
-			delay_ms(1000); 
-			time0=time;
 		}
 	}
 	else if(mode==111)
@@ -269,11 +254,282 @@ void mode_change()
 		{
 			mode+=1;
 			car_run(0x03);
+			delay_ms(1000); 
+		}
+	}
+	else if(mode==121)
+	{
+		if(time>=time0+35)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(1000); 
+			time0=time;
+		}
+	}
+	else if(mode==122)
+	{
+		if(time>=time0+55)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			turn_180(0);
+			time0=time;
+		}
+	}
+	else if(mode==123)
+	{
+		if(time>=time0+50)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(1000); 
+		}
+	}
+	else if(mode==2)
+	{
+		if(time>=120)
+		{
+			if(aim==3||aim==4)
+			{
+				car_run(0x03);
+				delay_ms(500); 
+				if(aim==3)
+				{
+					mode=210;
+					turn_90(yaw_90);
+					mode=211;
+					time0=time;
+				}
+				else
+				{
+					mode=220;
+					turn_90(yaw_90r);
+					mode=221;
+					time0=time;
+				}
+			}
+			else
+			{
+				mode+=1;
+				time0=time;
+			}
+		}
+	}
+	else if(mode==211)
+	{
+		if(time>=time0+35)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(1000); 
+			time0=time;		
+		}
+	}
+	else if(mode==212)
+	{
+		if(time>=time0+55)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			turn_180(1);
+			time0=time;
+		}
+	}
+	else if(mode==213)
+	{
+		if(time>=time0+120)
+		{
+			mode+=1;
+			car_run(0x03);
 			delay_ms(100); 
 		}
 	}
-	else
+	else if(mode==221)
 	{
+		if(time>=time0+35)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(1000); 
+			time0=time;
+		}
+	}
+	else if(mode==222)
+	{
+		if(time>=time0+55)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			turn_180(0);
+			time0=time;
+		}
+	}
+	else if(mode==223)
+	{
+		if(time>=time0+120)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(1000); 
+		}
+	}
+	else if(mode==3)
+	{
+		if(time>=170)
+		{
+			if(aim==5||aim==6||aim==7||aim==8)
+			{
+				car_run(0x03);
+				delay_ms(500); 
+				if(aim==5)
+				{
+					mode=3110;
+					turn_90(yaw_90);
+					mode=3111;
+					time0=time;
+				}
+				else if(aim==7)
+				{
+					mode=3120;
+					turn_90(yaw_90);
+					mode=3121;
+					time0=time;
+				}
+				
+				else if(aim==6)
+				{
+					mode=3210;
+					turn_90(yaw_90r);
+					mode=3211;
+					time0=time;
+				}else if(aim==8)
+				{
+					mode=3220;
+					turn_90(yaw_90r);
+					mode=3221;
+					time0=time;
+				}
+			}
+			else
+			{
+				mode+=1;
+				time0=time;
+			}
+		}
+	}
+	else if(mode==3111)//远端第一次左转后前进再右转
+	{
+		if(time>=time0+35)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(1000); 
+			turn_90(yaw_0);			
+			time0=time;		
+		}
+	}
+	else if(mode==3112)//远端右转后前进
+	{
+		if(time>=time0+25)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100);
+			time0=time;
+		}
+	}
+	
+	else if(mode==3113)//远端后退然后转至90度
+	{
+		if(time>=time0+55)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			turn_90(yaw_90);
+			time0=time;
+		}
+	}
+	
+	else if(mode==3114)//再后退
+	{
+		if(time>=time0+50)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			turn_180(1);
+			time0=time;
+		}
+	}
+	else if(mode==3115)//后退至起点
+	{
+		if(time>=time0+170)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			time0=time;
+		}
+	}
+	else if(mode==3121)//远端第一次左转后前进再右转
+	{
+		if(time>=time0+35)
+		{
+			mode+=10;
+			car_run(0x03);
+			delay_ms(1000); 
+			turn_180(1);		
+			time0=time;		
+		}
+	}
+	else if(mode==3122)//远端左转后前进
+	{
+		if(time>=time0+25)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100);
+			time0=time;
+		}
+	}
+	
+	else if(mode==3123)//远端后退然后转至90度
+	{
+		if(time>=time0+55)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			turn_90(yaw_90);
+			time0=time;
+		}
+	}
+	
+	else if(mode==3124)//再后退
+	{
+		if(time>=time0+50)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			turn_180(1);
+			time0=time;
+		}
+	}
+	else if(mode==3125)//后退至起点
+	{
+		if(time>=time0+170)
+		{
+			mode+=1;
+			car_run(0x03);
+			delay_ms(100); 
+			time0=time;
+		}
 	}
 }
 
@@ -324,19 +580,57 @@ int main(void)
 		if(work==1)
 		{
 			if(mode==1)
-				run_line(yaw_0);
-			else if(mode==2)
-				run_line(yaw_0);
-			else if(mode==3)
-				run_line(yaw_0);
+				run_line(yaw_0);		
 			else if(mode==111)
 				run_line(yaw_90);
 			else if(mode==112)
 				back_line(yaw_90);
 			else if(mode==113)
 				run_line(yaw_180_1);
-
+			else if(mode==121)
+				run_line(yaw_90r);
+			else if(mode==122)
+				back_line(yaw_90r);
+			else if(mode==123)
+				run_line(yaw_180_2);
+			else if(mode==2)
+				run_line(yaw_0);
+			else if(mode==211)
+				run_line(yaw_90);
+			else if(mode==212)
+				back_line(yaw_90);
+			else if(mode==213)
+				run_line(yaw_180_1);
+			else if(mode==221)
+				run_line(yaw_90r);
+			else if(mode==222)
+				back_line(yaw_90r);
+			else if(mode==223)
+				run_line(yaw_180_2);
+			else if(mode==3)
+				run_line(yaw_0);
+			else if(mode==3111)
+				run_line(yaw_90);
+			else if(mode==3112)
+				run_line(yaw_0);
+			else if(mode==3113)
+				back_line(yaw_0);
+			else if(mode==3114)
+				back_line(yaw_90);
+			else if(mode==3115)
+				run_line(yaw_180_1);
+			else if(mode==3121)
+				run_line(yaw_90);
+			else if(mode==3122)
+				run_line(yaw_180_1);
+			else if(mode==3123)
+				back_line(yaw_180_1);
+			else if(mode==3124)
+				back_line(yaw_90);
+			else if(mode==3125)
+				run_line(yaw_180_1);
 			mode_change();
+			
 		}
 		else if(test_mode==1)
 		{
