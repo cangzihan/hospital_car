@@ -34,6 +34,7 @@
 ".\obj\exti.o"
 ".\obj\pwm.o"
 ".\obj\driver.o"
+".\obj\openmv.o"
 ".\obj\sys.o"
 ".\obj\delay.o"
 ".\obj\usart.o"
